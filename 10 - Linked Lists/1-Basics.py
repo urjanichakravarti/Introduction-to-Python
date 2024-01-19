@@ -1,111 +1,116 @@
-# The __init__ method in Python is a special method also known as the constructor.
-# It is automatically called when you create a new instance (object) of a class.
-# The primary purpose of the __init__ method is to initialize the attributes (or properties) of the object.
-
-"""
-Syntax of __init__ method:
-
-def __init__(self, parameter1, parameter2, ...):
-    # Constructor body
-    self.attribute1 = parameter1
-    self.attribute2 = parameter2
-    # ...
-"""
 class Node:
-    def __init__(self, data = None, next = None):
+    # we will use the Node class to create a linked list
+    #  __init__ method that initializes the linked list with an empty head
+    def __init__(self, data):
+        # The __init__ method takes a parameter data and initializes the data attribute with the provided value.
         self.data = data
-        self.next = next
+        # The next attribute is initialized to None. This indicates that when a node is created,
+        # it initially doesn't point to any other node (since it's the last node in the list).
+        self.next = None
 
 class LinkedList:
     def __init__(self):
+        # The __init__ method initializes the head attribute to None.
+        # This indicates that when a linked list is created, it starts with an empty list (no nodes yet).
         self.head = None
 
-    def print(self):
+    # we have created an insertAtBegin() method to insert a node at the beginning of the linked list,
+    # an insertAtIndex() method to insert a node at the given index of the linked list,
+    # and insertAtEnd() method inserts a node at the end of the linked list.
+
+    def insertAtBegin(self, data):
+        new_node = Node(data)
         if self.head is None:
-            print("Linked list is empty")
+            self.head = new_node
             return
-        itr = self.head
-        llstr = ''
-        while itr:
-            llstr += str(itr.data)+' --> ' if itr.next else str(itr.data)
-            itr = itr.next
-        print(llstr)
+        else:
+            new_node.next = self.head
+            self.head = new_node
 
-    def get_length(self):
-        count = 0
-        itr = self.head
-        while itr:
-            count+=1
-            itr = itr.next
+    def insertAtIndex(self, data, index):
+        new_node = Node(data)
+        current_node = self.head
+        position = 0
+        if position == index:
+            self.insertAtBegin(data)
+        else:
+            while(current_node != None and position+1 != index):
+                position += 1
+                current_node = current_node.next
 
-        return count
+            if current_node != None:
+                new_node.next = current_node.next
+                current_node.next = new_node
+            else:
+                print("Index doesn't exist")
 
-    def insert_at_begining(self, data):
-        node = Node(data, self.head)
-        self.head = node
+    def insertAtEnd(self, data):
+        new_node = Node(data)
 
-    def insert_at_end(self, data):
         if self.head is None:
-            self.head = Node(data, None)
+            self.head = new_node
             return
 
-        itr = self.head
+        current_node = self.head
 
-        while itr.next:
-            itr = itr.next
+        while(current_node.next):
+            current_node = current_node.next
 
-        itr.next = Node(data, None)
+        current_node.next = new_node
 
-    def insert_at(self, index, data):
-        if index<0 or index>self.get_length():
-            raise Exception("Invalid Index")
+    # the updateNode() function is to update a node at a given index
+    # the remove_first_node() function is to remove the first node of a ll
+    # the remove_last_node() function is to remove the last node of a ll
 
-        if index==0:
-            self.insert_at_begining(data)
+    def updateNode(self, val, index):
+        position = 0
+        current_node = self.head
+        if position == index:
+            current_node.data = val
+        else:
+            while(current_node != None and position != index):
+                position += 1
+                current_node = current_node.next
+
+            if current_node != None:
+                current_node.data = val
+            else:
+                print("Index is not present")
+
+    def remove_first_node(self):
+        if self.head is None:
             return
+        self.head = self.head.next
 
-        count = 0
-        itr = self.head
-        while itr:
-            if count == index - 1:
-                node = Node(data, itr.next)
-                itr.next = node
-                break
-
-            itr = itr.next
-            count += 1
-
-
-    def remove_at(self, index):
-        if index<0 or index>=self.get_length():
-            raise Exception("Invalid Index")
-
-        if index==0:
-            self.head = self.head.next
+    def remove_last_node(self):
+        if self.head is None:
             return
+        current_node = self.head
 
-        count = 0
-        itr = self.head
-        while itr:
-            if count == index - 1:
-                itr.next = itr.next.next
-                break
+        while current_node.next.next:
+            current_node = current_node.next
 
-            itr = itr.next
-            count+=1
+        current_node.next = None
 
-    def insert_values(self, data_list):
-        self.head = None
-        for data in data_list:
-            self.insert_at_end(data)
+    def printll(self):
+        current_node = self.head
+        while(current_node):
+            print(current_node.data)
+            current_node = current_node.next
 
-if __name__ == '__main__':
-    ll = LinkedList()
-    ll.insert_values(["banana","mango","grapes","orange"])
-    ll.insert_at(1,"blueberry")
-    ll.remove_at(2)
-    ll.print()
+# Create a new Linked List
+llist = LinkedList()
 
-    ll.insert_values([45,7,12,567,99])
-    ll.insert_at_end(67)
-    ll.print()
+# Add Nodes
+llist.insertAtEnd('a')
+print("Node Data")
+llist.printll()
+llist.insertAtEnd('b')
+print("Node Data")
+llist.printll()
+llist.insertAtBegin('c')
+print("Node Data")
+llist.printll()
+llist.insertAtIndex('d', 2)
+print("Node Data")
+llist.printll()
